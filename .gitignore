@@ -64,5 +64,3 @@ node_modules
 dist
 .DS_Store
 /.local*
-CLAUDE.md
-docs/WINDOWS_DEVELOPMENT_SETUP.md
