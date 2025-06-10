@@ -25,6 +25,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { objectTitle } from "src/core/files";
 import { galleryTitle } from "src/core/galleries";
 import { lazyComponent } from "src/utils/lazyComponent";
+import TextUtils from "src/utils/text";
 import isEqual from "lodash-es/isEqual";
 import {
   yupDateString,
@@ -410,7 +411,7 @@ export const SceneEditPanel: React.FC<IProps> = ({
           setScraper(undefined);
           onSceneSelected(s);
         }}
-        name={formik.values.title || objectTitle(scene) || ""}
+        name={formik.values.title || TextUtils.cleanSceneTitle(objectTitle(scene)) || ""}
       />
     );
   };

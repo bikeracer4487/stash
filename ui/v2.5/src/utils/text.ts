@@ -255,6 +255,30 @@ const fileNameFromPath = (path: string) => {
   return path.replace(/^.*[\\/]/, "");
 };
 
+const cleanSceneTitle = (filename: string) => {
+  if (!filename) return "";
+  
+  // Remove file extension
+  let cleaned = filename.replace(/\.[^/.]+$/, "");
+  
+  // Replace special characters with spaces first
+  cleaned = cleaned.replace(/[^a-zA-Z0-9\s]/g, " ");
+  
+  // Remove resolution strings (case insensitive)
+  const resolutions = [
+    "2160p", "2160", "1920p", "1920", "1440p", "1440", "1080p", "1080", 
+    "720p", "720", "540p", "540", "480p", "480", "360p", "360", 
+    "240p", "240", "144p", "144", "4k", "8k", "6k", "5k", "7k"
+  ];
+  const resolutionRegex = new RegExp(`\\b(${resolutions.join("|")})\\b`, "gi");
+  cleaned = cleaned.replace(resolutionRegex, " ");
+  
+  // Replace multiple spaces with single space and trim
+  cleaned = cleaned.replace(/\s+/g, " ").trim();
+  
+  return cleaned;
+};
+
 const stringToDate = (dateString: string) => {
   if (!dateString) return null;
 
@@ -508,6 +532,7 @@ const TextUtils = {
   formatTimestampRange,
   timestampToSeconds,
   fileNameFromPath,
+  cleanSceneTitle,
   stringToDate,
   stringToFuzzyDate,
   stringToFuzzyDateTime,
