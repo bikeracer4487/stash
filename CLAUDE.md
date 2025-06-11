@@ -110,3 +110,6 @@ Each major entity follows a consistent pattern:
 - Transcoding, thumbnail generation, and sprite generation
 - Support for various video and image formats
 - Streaming capabilities with HLS/DASH support
+
+## PR Branch Creation Guidelines
+When I ask you to create a PR branch, that means I want you to create a new branch in the repo but then normalize it to the parent repo for PR prep by removing all Claude-created settings and documentation files and then pushing these changes to the new branch (named PR-branch). For this purpose, create a "CLAUDE_FILES.md" file for keeping track of these files which currently consists only of CLAUDE.md and docs/WINDOWS_DEVELOPMENT_SETUP.md . Lastly, to prep for PR, you will need to sync the parent repo's README.md to our branch. If the 'PR-branch' already exists, then remove it and create a new one.
