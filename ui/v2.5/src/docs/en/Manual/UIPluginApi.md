@@ -83,6 +83,8 @@ Returns a `Promise<void>` that resolves when all of the components have been loa
 ### `hooks`
 
 This namespace provides access to the following core utility hooks:
+- `useGalleryLightbox`
+- `useLightbox`
 - `useSpriteInfo`
 - `useToast`
 
@@ -143,7 +145,9 @@ Returns `void`.
 
 #### Patchable components and functions
 
+- `AlertModal`
 - `App`
+- `BackgroundImage`
 - `BooleanSetting`
 - `ChangeButtonSetting`
 - `CompressedPerformerDetailsPanel`
@@ -177,6 +181,8 @@ Returns `void`.
 - `GroupSelect`
 - `GroupSelect.sort`
 - `NumberSetting`
+- `Pagination`
+- `PaginationIndex`
 - `PerformerAppearsWithPanel`
 - `PerformerCard`
 - `PerformerCard.Details`
@@ -219,6 +225,7 @@ Returns `void`.
 - `StudioIDSelect`
 - `StudioSelect`
 - `StudioSelect.sort`
+- `SweatDrops`
 - `TabTitleCounter`
 - `TagCard`
 - `TagCard.Details`
@@ -231,6 +238,7 @@ Returns `void`.
 - `TagIDSelect`
 - `TagSelect`
 - `TagSelect.sort`
+- `TruncatedText`
 - `PluginSettings`
 - `Setting`
 - `SettingGroup`
