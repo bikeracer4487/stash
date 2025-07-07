@@ -62,6 +62,7 @@ import { FilterButton } from "../List/Filters/FilterButton";
 import { Icon } from "../Shared/Icon";
 import { ListViewOptions } from "../List/ListViewOptions";
 import { PageSizeSelector, SortBySelect } from "../List/ListFilter";
+import { Criterion } from "src/models/list-filter/criteria/criterion";
 
 function renderMetadataByline(result: GQL.FindScenesQueryResult) {
   const duration = result?.data?.findScenes?.duration;
@@ -316,11 +317,14 @@ interface IOperations {
 }
 
 const ListToolbarContent: React.FC<{
-  criteriaCount: number;
+  criteria: Criterion[];
   items: GQL.SlimSceneDataFragment[];
   selectedIds: Set<string>;
   operations: IOperations[];
   onToggleSidebar: () => void;
+  onEditCriterion: (c: Criterion) => void;
+  onRemoveCriterion: (criterion: Criterion, valueIndex?: number) => void;
+  onRemoveAllCriterion: () => void;
   onSelectAll: () => void;
   onSelectNone: () => void;
   onEdit: () => void;
@@ -328,11 +332,14 @@ const ListToolbarContent: React.FC<{
   onPlay: () => void;
   onCreateNew: () => void;
 }> = ({
-  criteriaCount,
+  criteria,
   items,
   selectedIds,
   operations,
   onToggleSidebar,
+  onEditCriterion,
+  onRemoveCriterion,
+  onRemoveAllCriterion,
   onSelectAll,
   onSelectNone,
   onEdit,
@@ -350,8 +357,15 @@ const ListToolbarContent: React.FC<{
         <div>
           <FilterButton
             onClick={() => onToggleSidebar()}
-            count={criteriaCount}
+            count={criteria.length}
             title={intl.formatMessage({ id: "actions.sidebar.toggle" })}
+          />
+          <FilterTags
+            criteria={criteria}
+            onEditCriterion={onEditCriterion}
+            onRemoveCriterion={onRemoveCriterion}
+            onRemoveAll={onRemoveAllCriterion}
+            truncateOnOverflow
           />
         </div>
       )}
@@ -550,6 +564,25 @@ export const FilteredSceneList = (props: IFilteredScenes) => {
     setShowSidebar,
   });
 
+  useEffect(() => {
+    Mousetrap.bind("e", () => {
+      if (hasSelection) {
+        onEdit?.();
+      }
+    });
+
+    Mousetrap.bind("d d", () => {
+      if (hasSelection) {
+        onDelete?.();
+      }
+    });
+
+    return () => {
+      Mousetrap.unbind("e");
+      Mousetrap.unbind("d d");
+    };
+  });
+
   const onCloseEditDelete = useCloseEditDelete({
     closeModal,
     onSelectNone,
@@ -656,6 +689,16 @@ export const FilteredSceneList = (props: IFilteredScenes) => {
       className: "create-new-item",
     },
     {
+      text: intl.formatMessage({ id: "actions.select_all" }),
+      onClick: () => onSelectAll(),
+      isDisplayed: () => totalCount > 0,
+    },
+    {
+      text: intl.formatMessage({ id: "actions.select_none" }),
+      onClick: () => onSelectNone(),
+      isDisplayed: () => hasSelection,
+    },
+    {
       text: intl.formatMessage({ id: "actions.play_random" }),
       onClick: playRandom,
       isDisplayed: () => totalCount > 1,
@@ -730,11 +773,14 @@ export const FilteredSceneList = (props: IFilteredScenes) => {
               })}
             >
               <ListToolbarContent
-                criteriaCount={filter.count()}
+                criteria={filter.criteria}
                 items={items}
                 selectedIds={selectedIds}
                 operations={otherOperations}
                 onToggleSidebar={() => setShowSidebar(!showSidebar)}
+                onEditCriterion={(c) => showEditFilter(c.criterionOption.type)}
+                onRemoveCriterion={removeCriterion}
+                onRemoveAllCriterion={() => clearAllCriteria()}
                 onSelectAll={() => onSelectAll()}
                 onSelectNone={() => onSelectNone()}
                 onEdit={onEdit}
@@ -750,13 +796,6 @@ export const FilteredSceneList = (props: IFilteredScenes) => {
               totalCount={totalCount}
               metadataByline={metadataByline}
               onChangeFilter={(newFilter) => setFilter(newFilter)}
-            />
-
-            <FilterTags
-              criteria={filter.criteria}
-              onEditCriterion={(c) => showEditFilter(c.criterionOption.type)}
-              onRemoveCriterion={removeCriterion}
-              onRemoveAll={() => clearAllCriteria()}
             />
 
             <LoadedContent loading={result.loading} error={result.error}>
